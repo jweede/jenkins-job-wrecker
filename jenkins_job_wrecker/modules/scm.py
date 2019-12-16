@@ -338,7 +338,8 @@ def subversionscm(top, parent):
         elif child.tag == 'locations':
             if len(list(child)) > 0:
                 repos = []
-                for c in child._children:
+
+                for c in child:
                     repo = {}
                     for r in c:
                         if r.tag == 'remote':

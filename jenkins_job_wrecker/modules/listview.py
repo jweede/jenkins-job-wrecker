@@ -1,4 +1,6 @@
 # encoding=utf8
+import json
+
 import jenkins_job_wrecker.modules.base
 from jenkins_job_wrecker.helpers import get_bool, gen_raw
 
@@ -63,7 +65,7 @@ class Listview(jenkins_job_wrecker.modules.base.Base):
                             elif ggchild.tag == 'amountTypeString':
                                 builddur['amount-type'] = ggchild.text
                             elif ggchild.tag == 'amount':
-                                builddur['amount'] = int(ggchild.text)
+                                builddur['amount'] = int(json.loads(ggchild.text))
                             elif ggchild.tag == 'lessThan':
                                 builddur['less-than'] = get_bool(ggchild.text)
                             elif ggchild.tag == 'buildDurationMinutes':
@@ -82,7 +84,7 @@ class Listview(jenkins_job_wrecker.modules.base.Base):
                             elif ggchild.tag == 'amountTypeString':
                                 trend['amount-type'] = ggchild.text
                             elif ggchild.tag == 'amount':
-                                trend['amount'] = int(ggchild.text)
+                                trend['amount'] = int(json.loads(ggchild.text))
                             elif ggchild.tag == 'statusTypeString':
                                 trend['status'] = ggchild.text
                             else:
