@@ -3,9 +3,9 @@ import os
 import xml.etree.ElementTree
 import pytest
 
-fixtures_path = os.path.join(os.path.dirname(__file__), 'fixtures')
+fixtures_path = os.path.join(os.path.dirname(__file__), "fixtures")
 
-ice_setup_xml_file = os.path.join(fixtures_path, 'ice-setup.xml')
+ice_setup_xml_file = os.path.join(fixtures_path, "ice-setup.xml")
 
 
 class TestArgParser(object):
@@ -14,23 +14,23 @@ class TestArgParser(object):
 
     def test_missing_filename(self):
         with pytest.raises(SystemExit):
-            parse_args(['-f'])
+            parse_args(["-f"])
 
     def test_missing_job_name(self):
         with pytest.raises(SystemExit):
-            parse_args(['-f', ice_setup_xml_file, '-n'])
+            parse_args(["-f", ice_setup_xml_file, "-n"])
 
     def test_ice_setup(self):
-        assert parse_args(['-f', ice_setup_xml_file, '-n', 'ice-setup'])
+        assert parse_args(["-f", ice_setup_xml_file, "-n", "ice-setup"])
 
     # "-s" tests
 
     def test_missing_jenkins_server(self):
         with pytest.raises(SystemExit):
-            parse_args(['-s'])
+            parse_args(["-s"])
 
     def test_jenkins_server(self):
-        assert parse_args(['-s', 'http://localhost:8080'])
+        assert parse_args(["-s", "http://localhost:8080"])
 
 
 class TestGetXmlRoot(object):
@@ -43,5 +43,5 @@ class TestGetXmlRoot(object):
         assert isinstance(root, xml.etree.ElementTree.Element)
 
     def test_xml_root_with_string(self):
-        root = get_xml_root(string='<testing></testing>')
+        root = get_xml_root(string="<testing></testing>")
         assert isinstance(root, xml.etree.ElementTree.Element)

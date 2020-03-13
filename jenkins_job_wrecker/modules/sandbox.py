@@ -3,7 +3,7 @@ import jenkins_job_wrecker.modules.base
 
 
 class Sandbox(jenkins_job_wrecker.modules.base.Base):
-    component = 'sandbox'
+    component = "sandbox"
 
     def gen_yml(self, yml_parent, data):
-        yml_parent.append(['sandbox', data.text])
+        yml_parent.append(["sandbox", data.text])
