@@ -10,7 +10,6 @@ import textwrap
 from jenkins_job_wrecker.modules.handlers import Handlers
 from jenkins_job_wrecker.modules.listview import Listview
 from jenkins_job_wrecker.registry import Registry
-from jenkins_job_wrecker.helpers import gen_raw
 import xml.etree.ElementTree as ET
 import yaml
 
@@ -100,9 +99,12 @@ def root_to_yaml(root, name, ignore_actions=False):
         if 'maven' in root.tag:
             job['project-type'] = 'maven'
 
-        raw = {}
-        raw['xml'] = ET.tostring(root)
-        job['xml'] = {'raw': raw}
+        xml_string = ET.tostring(root, encoding="unicode", method="xml")
+        job["xml"] = {
+            "raw": {
+                "xml": xml_string,
+            }
+        }
 
     return yaml.dump(build, default_flow_style=False, default_style=None)
 

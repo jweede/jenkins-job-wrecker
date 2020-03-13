@@ -2,16 +2,16 @@
 set -euo pipefail
 
 HERE="$(realpath "$(dirname "$0")")"
-VENV="${HERE}/ve"
+VENV="${HERE}/venv"
 
 if [[ ! -e "${VENV}/bin/activate" ]]; then
-  virtualenv -p python2 "${VENV}"
+  virtualenv -p python3 "${VENV}"
   "${VENV}/bin/pip" install -e "${HERE}"
 fi
 
-source "${HERE}/ve/bin/activate"
+source "${VENV}/bin/activate"
 
-JENKINS_URL=
+JENKINS_URL=https://jenkins.kyruus.com/
 output_dir="${HERE}/output"
 export JJW_USERNAME=
 export JJW_PASSWORD=
