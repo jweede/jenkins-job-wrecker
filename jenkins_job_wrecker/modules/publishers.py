@@ -1,10 +1,12 @@
 # encoding=utf8
 from __future__ import print_function
-
+import logging
 import re
 
 import jenkins_job_wrecker.modules.base
 from jenkins_job_wrecker.helpers import get_bool, camel_case_to_dashes
+
+log = logging.getLogger("jjwrecker")
 
 
 class Publishers(jenkins_job_wrecker.modules.base.Base):
@@ -100,7 +102,7 @@ def extendedemailpublisher(top, parent):
         elif element.tag == "sendTo":
             ext_email["send-to"] = element.text
         elif element.tag == "configuredTriggers":
-            print("IGNORED configuredTriggers in email-ext")
+            log.warning("IGNORED configuredTriggers in email-ext")
         else:
             raise NotImplementedError("cannot handle XML %s" % element.tag)
 
@@ -181,6 +183,9 @@ def mailer(top, parent):
     email_settings = {}
     for element in top:
         if element.tag == "recipients":
+            if not element.text:
+                log.warning("IGNORED Email Publisher with empty recipients")
+                return
             email_settings["recipients"] = element.text
         elif element.tag == "dontNotifyEveryUnstableBuild":
             email_settings["notify-every-unstable-build"] = element.text == "false"

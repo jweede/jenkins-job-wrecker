@@ -9,7 +9,6 @@ class Builders(jenkins_job_wrecker.modules.base.Base):
         builders = []
         for child in data:
             object_name = child.tag.split(".")[-1].lower()
-            print("object_name: %s" % object_name)
             self.registry.dispatch(self.component, object_name, child, builders)
         yml_parent.append(["builders", builders])
 
