@@ -195,6 +195,10 @@ def slacknotifierslackjobproperty(top, parent):
         else:
             raise NotImplementedError("cannot handle XML %s" % child.tag)
 
+    # handle this exception
+    if slack["include-custom-message"] is True and "custom-message" not in slack:
+        slack["include-custom-message"] = False
+
     parent.append({"slack": slack})
 
 

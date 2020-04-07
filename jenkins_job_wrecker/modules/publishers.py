@@ -286,6 +286,11 @@ def slacknotifier(top, parent):
             slacknotifier["bot-user"] = get_bool(child.text)
         else:
             raise NotImplementedError("cannot handle " "XML %s" % child.tag)
+
+    # handle this exception
+    if slacknotifier["include-custom-message"] is True and "custom-message" not in slacknotifier:
+        slacknotifier["include-custom-message"] = False
+
     parent.append({"slack": slacknotifier})
 
 
