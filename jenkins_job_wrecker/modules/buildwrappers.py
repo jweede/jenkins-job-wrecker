@@ -69,7 +69,7 @@ def buildtimeoutwrapper(top, parent):
                 if subelement.tag == "timeoutMinutes":
                     timeout_inject["timeout"] = int(subelement.text)
                 elif subelement.tag == "timeoutSecondsString":
-                    timeout_inject["timeout"] = int(subelement.text) / 60
+                    timeout_inject["timeout"] = int(subelement.text) // 60
                 elif subelement.tag == "deadlineToleranceInMinutes":
                     timeout_inject["deadline-tolerance"] = int(subelement.text)
                 elif subelement.tag == "timeoutPercentage":

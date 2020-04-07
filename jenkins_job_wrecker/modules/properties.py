@@ -1,6 +1,6 @@
 # encoding=utf8
 import jenkins_job_wrecker.modules.base
-from jenkins_job_wrecker.helpers import get_bool, gen_raw
+from jenkins_job_wrecker.helpers import get_bool, gen_raw, camel_case_to_dashes
 from jenkins_job_wrecker.modules.triggers import Triggers
 
 PARAMETER_MAPPER = {
@@ -169,23 +169,27 @@ def slacknotifierslackjobproperty(top, parent):
         "notifyBackToNormal": "notify-back-to-normal",
         "notifyRepeatedFailure": "notify-repeated-failure",
     }
+    string_tags = {
+        "teamDomain",
+        "token",
+        "room",
+        "buildServerUrl",
+        "room",
+        "customMessage",
+    }
+    bool_tags = {
+        "includeTestSummary",
+        "showCommitList",
+        "includeCustomMessage",
+        "startNotification",
+    }
+
     for child in top:
-        if child.tag == "teamDomain":
-            slack["team-domain"] = child.text
-        elif child.tag == "token":
-            slack["token"] = child.text
-        elif child.tag == "room":
-            slack["room"] = child.text
-        elif child.tag == "includeTestSummary":
-            slack["include-test-summary"] = child.text == "true"
-        elif child.tag == "showCommitList":
-            slack["show-commit-list"] = child.text == "true"
-        elif child.tag == "includeCustomMessage":
-            slack["include-custom-message"] = child.text == "true"
-        elif child.tag == "customMessage":
-            slack["custom-message"] = child.text
-        elif child.tag == "startNotification":
-            slack["start-notification"] = child.text == "true"
+        if child.tag in string_tags:
+            if child.text:
+                slack[camel_case_to_dashes(child.tag)] = child.text
+        elif child.tag in bool_tags:
+            slack[camel_case_to_dashes(child.tag)] = get_bool(child.text)
         elif child.tag in notifications:
             slack[notifications[child.tag]] = child.text == "true"
         else:

@@ -9,6 +9,7 @@ class Builders(jenkins_job_wrecker.modules.base.Base):
         builders = []
         for child in data:
             object_name = child.tag.split(".")[-1].lower()
+            print("object_name: %s" % object_name)
             self.registry.dispatch(self.component, object_name, child, builders)
         yml_parent.append(["builders", builders])
 
@@ -98,3 +99,25 @@ def batchfile(child, parent):
             raise NotImplementedError("cannot handle " "XML %s" % shell_element.tag)
 
     parent.append({"batch": shell})
+
+
+_envinject_tag_map = {
+    "propertiesFilePath": "properties-file",
+    "propertiesContent": "properties-content",
+    "scriptFilePath": "script-file",
+    "scriptContent": "script-content",
+}
+
+
+def envinjectbuilder(child, parent):
+    props = {}
+    for info_element in child:
+        assert info_element.tag == "info"
+        for prop_element in info_element:
+            _tag = prop_element.tag
+            _yml_tag = _envinject_tag_map.get(_tag)
+            if _yml_tag is not None:
+                props[_yml_tag] = prop_element.text
+            else:
+                raise NotImplementedError("cannot handle XML %s" % info_element.tag)
+    parent.append({"inject": props})

@@ -4,7 +4,7 @@ from __future__ import print_function
 import re
 
 import jenkins_job_wrecker.modules.base
-from jenkins_job_wrecker.helpers import get_bool
+from jenkins_job_wrecker.helpers import get_bool, camel_case_to_dashes
 
 
 class Publishers(jenkins_job_wrecker.modules.base.Base):
@@ -252,38 +252,33 @@ def slacknotifier(top, parent):
         "notifyRegression": "notify-regression",
         "notifyRepeatedFailure": "notify-repeated-failure",
     }
+    string_tags = {
+        "teamDomain",
+        "authToken",
+        "authTokenCredentialId",
+        "buildServerUrl",
+        "room",
+        "commitInfoChoice",
+        "customMessage",
+        "baseUrl",
+    }
+
+    # import pdb; pdb.set_trace()
+
     for child in top:
-        if child.tag == "teamDomain":
+        if child.tag in string_tags:
             if child.text:
-                slacknotifier["team-domain"] = child.text
-        elif child.tag == "authToken":
-            if child.text:
-                slacknotifier["auth-token"] = child.text
-        elif child.tag == "authTokenCredentialId":
-            if child.text:
-                slacknotifier["auth-token-credential-id"] = child.text
-        elif child.tag == "buildServerUrl":
-            slacknotifier["build-server-url"] = child.text
-        elif child.tag == "room":
-            slacknotifier["room"] = child.text
+                slacknotifier[camel_case_to_dashes(child.tag)] = child.text
         elif child.tag in notifications:
             slacknotifier[notifications[child.tag]] = get_bool(child.text)
         elif child.tag == "includeTestSummary":
             slacknotifier["include-test-summary"] = get_bool(child.text)
         elif child.tag == "includeFailedTests":
             slacknotifier["include-failed-tests"] = get_bool(child.text)
-        elif child.tag == "commitInfoChoice":
-            slacknotifier["commit-info-choice"] = child.text
         elif child.tag == "includeCustomMessage":
             slacknotifier["include-custom-message"] = get_bool(child.text)
-        elif child.tag == "customMessage":
-            if child.text:
-                slacknotifier["custom-message"] = child.text
         elif child.tag == "botUser":
             slacknotifier["bot-user"] = get_bool(child.text)
-        elif child.tag == "baseUrl":
-            if child.text:
-                slacknotifier["base-url"] = child.text
         else:
             raise NotImplementedError("cannot handle " "XML %s" % child.tag)
     parent.append({"slack": slacknotifier})

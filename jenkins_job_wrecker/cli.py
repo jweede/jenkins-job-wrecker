@@ -10,6 +10,7 @@ import textwrap
 from jenkins_job_wrecker.modules.handlers import Handlers
 from jenkins_job_wrecker.modules.listview import Listview
 from jenkins_job_wrecker.registry import Registry
+from jenkins_job_wrecker.helpers import et_to_string
 import xml.etree.ElementTree as ET
 import yaml
 
@@ -57,8 +58,7 @@ def get_xml_root(filename=False, string=False):
 # Walk an XML ElementTree ("root"), and return a YAML string
 def root_to_yaml(root, name, ignore_actions=False):
     # Top-level "job" data
-    job = {}
-    job["name"] = text_type(name)
+    job = {"name": text_type(name)}
     build = []
 
     # Create register
@@ -97,8 +97,8 @@ def root_to_yaml(root, name, ignore_actions=False):
         if "maven" in root.tag:
             job["project-type"] = "maven"
 
-        xml_string = ET.tostring(root, encoding="unicode", method="xml")
-        job["xml"] = {"raw": {"xml": xml_string,}}
+        xml_string = et_to_string(root)
+        job["xml"] = {"raw": {"xml": xml_string}}
 
     return yaml.dump(build, default_flow_style=False, default_style=None)
 
